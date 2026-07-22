@@ -1,0 +1,7 @@
+interface:
+  display_name: "Evidence Research Report"
+  short_description: "Concise reports grounded in verified sources"
+  default_prompt: "Use $evidence-research-report to create a concise, source-verified research report."
+
+policy:
+  allow_implicit_invocation: true
