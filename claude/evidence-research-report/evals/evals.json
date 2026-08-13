@@ -51,5 +51,25 @@
       "Does not convert common belief into fact",
       "Offers a bounded evidence gap statement"
     ]
+  },
+  {
+    "id": "sanctions-authority-direct",
+    "query": "供应商 A 是否被列入制裁名单？直接查官方原始库给出结论。",
+    "expected_mode": "standard",
+    "expected_behavior": [
+      "Goes directly to an authoritative sanctions source (e.g. OpenSanctions) instead of relying on search snippets",
+      "Reads the actual source content before citing",
+      "Gives a bounded, dated sanctions finding"
+    ]
+  },
+  {
+    "id": "archive-url-on-consequential",
+    "query": "核实某监管机关最新指引的关键要求，结论会直接影响采购决策。",
+    "expected_mode": "standard",
+    "expected_behavior": [
+      "Attaches a Wayback snapshot (web.archive.org/save/...) for the consequential source",
+      "Records the archive URL in references",
+      "Keeps original URL with an archive note when offline"
+    ]
   }
 ]
