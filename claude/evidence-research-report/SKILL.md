@@ -31,6 +31,8 @@ description: Use when a user needs a source-verified research report for vendor 
 
 快速模式遵守以上规则即可。标准模式开始前完整读取 `references/evidence-policy.md`；撰写正式报告时读取 `references/report-patterns.md`。
 
+调研对象为「多个实体 × 固定维度」的横向比较（竞品对标、厂商比价、准入门槛对照）时，采用 `report-patterns.md` 中「多实体横向比较报告」模式：需求背景 → 调研目标 → 对比表格 → 具体建议结论，禁止「留给业务领导定夺」类空话结语。
+
 ## 执行流程
 
 1. 从用户请求提取决策问题、范围、资料截至时间、语言与篇幅。只有缺失会实质改变结果时才提一个澄清问题。
