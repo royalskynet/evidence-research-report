@@ -35,7 +35,7 @@ description: Use when a user needs a source-verified research report for vendor 
 
 1. 从用户请求提取决策问题、范围、资料截至时间、语言与篇幅。只有缺失会实质改变结果时才提一个澄清问题。
 2. 列出最多 3–5 个必答问题。标准与深度模式：先列 2–3 个利益相关视角（如采购方、监管、竞品），每个视角至少覆盖一问，避免漏掉某方真正在意的面向；快速模式通常只有 1–2 个。
-3. 用少量中英文查询找原始来源；能合并的搜索合并，避免同义词反复搜索。
+3. 用少量中英文查询找原始来源；能合并的搜索合并，避免同义词反复搜索。搜尋或抓取被封鎖時，读取 `references/retrieval-resilience.md` 并改用 `scripts/search_web.py`／`scripts/fetch_page.py` 的退路链，不得直接放弃改写缺口。
 4. 优先抓取最可能直接回答问题的页面。页面只重复已知内容时，不继续扩张。
 5. 每读完一轮，检查“还缺哪个会改变结论的重要证据？”没有具名缺口就停止。
 6. 依所选模式撰写简体中文 Markdown；公司名、产品名与技术术语保留原文。用户明确指定其他语言时以用户要求为准。
@@ -70,7 +70,8 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/validate_report.py" <report.md>
 
 ## 安全与边界
 
-- 不执行 `source ~/.zshrc`，不读取 API key，不把主张、URL 或报告传给第三方模型。
+- 不执行 `source ~/.zshrc`，不读取 API key，不把报告内容、主张清单或 API key 传给任何第三方模型或服务。
+- 允许把目标 URL／搜索 query 交给白名单服务（Firecrawl、r.jina.ai、web.archive.org、archive.today）取得页面内容；本地渲染层（Camoufox）不把 URL 外送。
 - 不因技能存在而改写用户明确要求保留的内容。
 - 若用户只要排版，完全停用研究流程。
-- 若来源受登录、付费墙或封锁限制，说明限制并改找可读取的原始替代来源；找不到就保留缺口。
+- 若来源受登录、付费墙或封锁限制，读取 `references/retrieval-resilience.md` 并改用检索退路；确实找不到就保留缺口。
