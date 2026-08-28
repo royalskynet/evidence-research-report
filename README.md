@@ -17,15 +17,16 @@ A compact, evidence-first research skill for Claude Code and OpenAI Codex. It pr
 ## Repository layout
 
 ```text
-claude/evidence-research-report/   Claude Code edition
-codex/evidence-research-report/    OpenAI Codex edition
-hermes/mannie-evidence-research/   Hermes Agent edition (ERRG + ERRD + ERRJ + OSINT)
-dist/                              Installable .skill archives
-docs/                              English and Chinese documentation
-tests/                             Deterministic validator tests
+claude/evidence-research-report/     Claude Code edition
+claude/competitive-research-report/  Claude Code edition, fixed peer-comparison benchmarking with two-round verification
+codex/evidence-research-report/      OpenAI Codex edition
+hermes/mannie-evidence-research/     Hermes Agent edition (ERRG + ERRD + ERRJ + OSINT)
+dist/                                Installable .skill archives
+docs/                                English and Chinese documentation, plus docs/devlog/ design notes
+tests/                               Deterministic validator tests
 ```
 
-The editions share the same evidence policy, report patterns, deep-mode controls, evaluations, and validator. `SKILL.md` files differ where platforms require different tool wording or metadata.
+The `evidence-research-report` editions share the same evidence policy, report patterns, deep-mode controls, evaluations, and validator. `SKILL.md` files differ where platforms require different tool wording or metadata. `competitive-research-report` is a separate, self-contained skill built for fixed-dimension benchmarking reports; see `docs/devlog/2026-08-28-two-round-verification.md`.
 
 > **Hermes edition**: Integrates ERRG (research), ERRD (debate audit), ERRJ (judgment), and OSINT presets into a single skill. Uses OmniRoute FREE LLM combo. Brief dependencies are `omniroute --port 20128`. n
 ## Quick start

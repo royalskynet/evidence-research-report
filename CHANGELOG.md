@@ -1,5 +1,13 @@
 # Changelog / 更新记录
 
+## Unreleased
+
+- New edition: `claude/competitive-research-report/`, for fixed peer-comparison benchmarking reports (e.g. exchange risk-control programs). Adds a two-round verification pattern: round 1 produces a sourced draft plus an internal gap list, round 2 gives each gap item exactly one follow-up attempt (local anti-bot render or subagent re-approach) with no retry, and the two rounds merge into one report with no standalone gaps section. See `docs/devlog/2026-08-28-two-round-verification.md`.
+
+---
+
+- 新增版本：`claude/competitive-research-report/`，用于固定同业对比对标类报告（如交易所风控体系对标）。加入两轮验证模式：第一轮产出带引用的初稿与一份内部缺口清单，第二轮对每条缺口只给一次补强机会（本地反爬渲染或子代理换角度重试），不重试；两轮结果合并为一份报告，不设独立的资料缺口章节。详见 `docs/devlog/2026-08-28-two-round-verification.zh-CN.md`。
+
 ## 1.1.0 — 2026-08-13
 
 - Validator: add `--check-list` claim→source checklist, `--check-urls` URL-liveness probe (offline-safe), and `--ledger` deep-mode YAML ledger cross-check.
