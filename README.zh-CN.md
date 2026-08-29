@@ -17,14 +17,15 @@
 ## 仓库结构
 
 ```text
-claude/evidence-research-report/   Claude Code 版
-codex/evidence-research-report/    OpenAI Codex 版
-dist/                              可安装的 .skill 压缩包
-docs/                              中英文说明
-tests/                             确定性验证器测试
+claude/evidence-research-report/     Claude Code 版
+claude/competitive-research-report/  Claude Code 版，固定维度对标报告，内含两轮验证模式
+codex/evidence-research-report/      OpenAI Codex 版
+dist/                                可安装的 .skill 压缩包
+docs/                                中英文说明，另含 docs/devlog/ 设计笔记
+tests/                               确定性验证器测试
 ```
 
-两版共用证据政策、报告结构、深度模式规则、评测案例与验证器。只有宿主平台的工具表述和元数据不同。
+`evidence-research-report` 各版共用证据政策、报告结构、深度模式规则、评测案例与验证器，只有宿主平台的工具表述和元数据不同。`competitive-research-report` 是独立的自包含技能，用于固定维度的对标类报告，详见 `docs/devlog/2026-08-28-two-round-verification.zh-CN.md`。
 
 ## 快速安装
 

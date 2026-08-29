@@ -1,0 +1,3 @@
+---
+description: Sanitized public mirror of a private exchange risk-control competitive research skill. Two-round verification pattern — round 1 produces a sourced draft plus an internal gap list; round 2 makes exactly one targeted follow-up attempt per gap item (local anti-bot render or subagent re-approach) and abandons on failure; the two rounds merge into one academically-toned report with no process trace and no standalone gap section. Organization-specific settings (client identity, signature rules, internal KPIs, named peer lists, and local anti-bot renderers) are now externalized to a profile file (`profile.example.md` as template); the core skill text itself is now shared with the private edition as-is without sanitization.
+---

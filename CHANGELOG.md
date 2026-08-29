@@ -1,5 +1,13 @@
 # Changelog / 更新记录
 
+## Unreleased
+
+- Refactor: externalize organization-specific configuration from `competitive-research-report` to external profile file. Client identity, signature rules, internal KPIs, peer comparison list, and local anti-bot renderers now live in `profile.local.md` (template: `profile.example.md`). The core skill text is now synchronized with the private edition as-is without sanitization — only the profile file requires deidentification for public release.
+
+---
+
+- 重構：外部化 `competitive-research-report` 的組織專屬設定。委託方身分、署名規則、內部考核維度、同業對標名單、本地反偵測渲染通道現已移至外部 profile 檔（樣本：`profile.example.md`）。核心 skill 文本現與私有版保持完全同步，不再做脫敏改寫——公開版只需對 profile 檔進行去識別化。
+
 ## 1.1.0 — 2026-08-13
 
 - Validator: add `--check-list` claim→source checklist, `--check-urls` URL-liveness probe (offline-safe), and `--ledger` deep-mode YAML ledger cross-check.
