@@ -2,11 +2,11 @@
 
 ## Unreleased
 
-- New edition: `claude/competitive-research-report/`, for fixed peer-comparison benchmarking reports (e.g. exchange risk-control programs). Adds a two-round verification pattern: round 1 produces a sourced draft plus an internal gap list, round 2 gives each gap item exactly one follow-up attempt (local anti-bot render or subagent re-approach) with no retry, and the two rounds merge into one report with no standalone gaps section. See `docs/devlog/2026-08-28-two-round-verification.md`.
+- Refactor: externalize organization-specific configuration from `competitive-research-report` to external profile file. Client identity, signature rules, internal KPIs, peer comparison list, and local anti-bot renderers now live in `profile.local.md` (template: `profile.example.md`). The core skill text is now synchronized with the private edition as-is without sanitization — only the profile file requires deidentification for public release.
 
 ---
 
-- 新增版本：`claude/competitive-research-report/`，用于固定同业对比对标类报告（如交易所风控体系对标）。加入两轮验证模式：第一轮产出带引用的初稿与一份内部缺口清单，第二轮对每条缺口只给一次补强机会（本地反爬渲染或子代理换角度重试），不重试；两轮结果合并为一份报告，不设独立的资料缺口章节。详见 `docs/devlog/2026-08-28-two-round-verification.zh-CN.md`。
+- 重構：外部化 `competitive-research-report` 的組織專屬設定。委託方身分、署名規則、內部考核維度、同業對標名單、本地反偵測渲染通道現已移至外部 profile 檔（樣本：`profile.example.md`）。核心 skill 文本現與私有版保持完全同步，不再做脫敏改寫——公開版只需對 profile 檔進行去識別化。
 
 ## 1.1.0 — 2026-08-13
 
