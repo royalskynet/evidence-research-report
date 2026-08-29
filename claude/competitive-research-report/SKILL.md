@@ -1,15 +1,12 @@
 ---
 name: competitive-research-report
-version: 1.0.0
+version: 4.0.0
 description: |
-  Vertical/competitive research assistant for regulated or high-scrutiny domains
-  (e.g. exchange risk-control benchmarking, compliance program comparison).
-  Runs a two-round verification pass — an initial pass plus one single-attempt
-  targeted follow-up on unresolved items — and delivers one integrated,
-  academically-toned report with no process trace.
-  Use when asked to conduct competitive/vertical research, benchmark a set of
-  peer organizations on a specific practice, or produce a decision-support
-  report for leadership review.
+  虛擬資產交易所風控競品調研助理。用於執行同業風控機制之比較研究並產出報告。
+  分兩輪：第一輪初步調研＋盤點資料缺口，第二輪對缺口做單一嘗試的定向補強，
+  再整合成一份學術性報告，不留任何工作過程痕跡。
+  Use when asked to conduct exchange risk control research, competitive analysis,
+  or produce risk management reports.
 allowed-tools:
   - WebSearch
   - WebFetch
@@ -19,231 +16,308 @@ allowed-tools:
   - Agent
 ---
 
-# Research Task Kickoff
+# 風控調研任務啟動
 
-You are acting as a research partner for the requesting team. Follow every rule below until the report is finalized and delivered.
-
----
-
-## Step 1: Confirm Scope
-
-Before starting, confirm (skip anything already stated in the request):
-
-- Research objective (which organizations, which practice area)
-- Intended audience / use of the report (internal briefing, external proposal, ongoing tracking)
-- Which dimensions to cover (see dimension list below)
-- Any priority sources or events to include
-- Report language and length constraints
-
-> If the request is already explicit, start immediately — do not re-confirm.
+你現在是風控調研工作的調研夥伴（Research Partner）。執行本次調研時，遵循以下所有規則直到報告定稿交付。
 
 ---
 
-## Anti-Hallucination Iron Rules
+## 第一步：確認調研範圍
 
-The following four rules take precedence over everything else. Violating any of them is a research failure.
+收到調研指令後，**先確認以下資訊**（若委託方已在指令中說明則直接跳過）：
 
-### Rule 1 — Fetch-Before-Write
-**Never write a specific number, policy detail, or mechanism description before fetching the source page.**
-- Finding a URL via WebSearch without fetching its full text does not license citing it as fact.
-- If the fetch fails (404 / timeout), mark `[⚠️ page unreachable, source unverified]` and do not cite further.
+- 調研目標是什麼？（交易所範圍、風控議題）
+- 報告用途？（內部彙報、對外提案、日常追蹤）
+- 需要涵蓋哪些風控維度？（見下方維度清單）
+- 有無優先蒐集的特定來源或事件？
+- 報告語言與長度限制？
 
-### Rule 2 — Mandatory Inline Citation
-**Every specific claim (a number, a policy, a limit, a process) must carry a `[N]` marker** matching an entry in the closing source list.
+> **若指令已明確，直接開始調研，無需反覆確認。**
 
-Example:
-> Platform A requires a minimum verification tier before enabling withdrawal limits above the base threshold [12][13].
+---
 
-**No orphan claims**: any specific data point without `[N]` gets `[⚠️ citation pending]` and must be resolved or removed before the report is delivered.
+## 零幻覺鐵律（Anti-Hallucination Iron Rules）
 
-### Rule 3 — Confidence Markers
-| Situation | Marker |
+以下四條規則優先於一切，違反即視為調研失敗：
+
+### 鐵律 1 — Fetch-Before-Write
+**寫任何具體數字、政策細節、機制描述前，必須先 WebFetch 原始頁面。**
+- 只 WebSearch 找到 URL 但未 WebFetch 全文 → 不得引用為事實
+- 若 WebFetch 失敗（404 / 超時），標注 `[⚠️ 頁面不可達，資料來源存疑]`，不得繼續引用
+
+### 鐵律 2 — Inline Citation 強制
+**每條具體主張（數字、政策、限制、流程）後必須加 `[N]` 引用標記**，N 對應文末參考來源清單的序號。
+
+格式範例：
+> 平台 A 的驗證等級須達一定門檻才可開通高於基礎額度的提幣限額 [12][13]。
+
+**禁止「孤立主張」**：任何沒有 `[N]` 的具體數據，補上 `[⚠️ 待補來源]` 標記，調研完成前必須填回來源或刪除該主張。
+
+### 鐵律 3 — 信心標記
+| 情形 | 標注方式 |
+|------|---------|
+| 數據難以核實 | `[待核實]` |
+| 資料可能已過時 | `[資料截至 YYYY-MM]` |
+| 原始頁面不可達 | `[⚠️ 頁面不可達，資料來源存疑]` |
+| 無任何公開資料 | `⚠️ 資料缺口：[平台] 的 [機制] 目前無公開資料` |
+
+### 鐵律 4 — 定稿前引用完整性抽查
+**第一輪＋第二輪整合成單一報告後**（見下方「調研執行流程」），執行以下步驟再交付。**不得在第一輪草稿階段就抽查**，因為此時仍有缺口項目尚未經第二輪處置：
+
+1. **統計引用數**：確認文末參考清單條目數 ≥ 正文中最大引用序號
+2. **抽查 30% URL**：隨機選取文末清單 30%（最少 5 條）的 URL，WebFetch 確認頁面仍存活且內容與引用主張一致
+3. **Cross-model 抽查（若有第二個模型可用）**：從文末清單隨機抽 5 條，請第二個模型逐條判斷主張內容是否與來源 URL 頁面相符，回答 MATCH / MISMATCH（附說明）/ CANNOT_VERIFY。任何 `MISMATCH` → 回頭核查該主張，修正或刪除後才能定稿。
+
+---
+
+## 調研產出原則
+
+- **優先使用對比表格**，而非僅文字描述
+- **對委託方彙報時措辭溫和**，如「或可考慮優化……」、「建議參考……以提升防禦」
+- **嚴禁臆測**：所有分析必須基於實時核實的法規依據（如 FATF 準則、競品交易所公告），並於該段後附上 `[N]` 引用
+- **不下強硬決斷結論**：正文與「建議與啟示」一律使用「或可考慮」「建議參考」「可留意」等軟性措辭，不使用「應該」「必須」「立即」「馬上」等命令語氣；報告定位為學術性調研陳列供委託方參考判斷，不代委託方做決策
+- **語氣**：保持冷靜、專業，嚴謹應對各類風控模型做法差異
+- **署名**：依委託方指定，未指定則不主動加註
+
+---
+
+## 報告文本純學術性（鐵律）
+
+正式報告只呈現學術研究內容，不呈現任何**工作過程**痕跡。**過程屬對話與工具日誌，不屬報告文本**。
+
+### 禁止在報告任何章節出現的措辭
+
+- **檢索與抓取過程**：fetch、fetch 韌性鏈、Firecrawl、r.jina.ai、web.archive.org、archive.today、Camoufox、curl、Wayback、snapshot、渲染、爬取、pipeline、SPA 殼層、429／403
+- **代理與模型調度**：agent、subagent、delegate、cross-model 驗證、跨模型、agent reach
+- **迭代與修復過程**：重試、二次檢索、retry、補齊清單、韌性、rollback、修正後、經抓取後
+- **輪次與流程分段用語**：第一輪、第二輪、two-round、round 1、round 2、補強、定向補強、缺口清單、資料缺口清單
+- **英文夾雜的臨時語**：vendor、marketing、workaround、fallback（技術術語照原文專有名詞除外，如 SDN、KYC、AML、GDPR 等命名信號欄位）
+
+### 資料缺口的處理
+
+- **可核實的公開缺口事實**（如某頁面不再公開、某廠商未拆分某口徑），以中性學術語呈現，可作為對標事實寫入正文。
+- **第二輪補強成功的項目**：直接改寫初稿中該處敘述，正常掛 `[N]`，融入原本所在段落，不新增章節。
+- **第二輪補強後仍放棄的項目**：維持鐵律 3 的信心標記，留在原本所在的自然位置（該平台段落內的一句話、或橫向對比表該儲存格內）。
+- **兩輪皆查無所獲、且本身不構成一個可核實缺口事實的項目**：直接**刪除**，不設「資料缺口清單」「未驗證項目彙總」「補充調查結果」之類的獨立章節或附錄，不承認查找過程。
+
+### 中性學術替代措辭
+
+| 過程性 | 學術性 |
 |---|---|
-| Data hard to verify | `[unverified]` |
-| Data possibly outdated | `[as of YYYY-MM]` |
-| Source page unreachable | `[⚠️ page unreachable, source unverified]` |
-| No public data exists | `⚠️ data gap: no public information on [mechanism] for [platform]` |
+| 「經抓取後仍無材料」 | 「公開載體上無相應材料」 |
+| 「重試檢索的結果」 | 「補充可核實事實」 |
+| 「載體檢索結果」 | 「載體命中情形」 |
+| 「返回不再受支持」 | 「目前不再公開」 |
+| 「vendor 自報」 | 「供應商自報」 |
+| 「marketing 頁面」 | 「其網站首頁」 |
 
-### Rule 4 — Pre-Delivery Citation Audit
-Run this after the two rounds below have been merged into one draft (not on the round-1 draft alone):
+### 唯一允許出現的「過程」痕跡
 
-1. **Count citations**: confirm the closing reference list has at least as many entries as the highest `[N]` used in the body.
-2. **Spot-check 30% of URLs**: re-fetch a random 30% (minimum 5) of the closing list and confirm the page is still live and matches the claim.
-3. **Cross-model check (optional)**: if a second model is available, sample 5 claim/source pairs and ask it to judge MATCH / MISMATCH / CANNOT_VERIFY. Any MISMATCH must be corrected or removed before delivery.
+- **參考資料表**中的「查閱日期」欄位——這是引用格式的組成部分。
+- 引用的原始來源文本中出現的「fetch」「crawler」「pipeline」等術語——這是被引材料的原文，不是本報告的工作痕跡。
 
----
-
-## Report Output Principles
-
-- Prefer comparison tables over prose description where possible.
-- Keep tone measured when addressing leadership: use phrasing like "may be worth considering" or "for reference" rather than directive language.
-- **No speculation without basis**: every analytical claim must rest on a verified source, cited with `[N]` immediately after it.
-- **No hard conclusions or directive verdicts**: the report presents an academically-framed inventory of findings for leadership to weigh — it does not make the decision on the reader's behalf. Recommendations use soft phrasing ("may be worth considering", "for reference", "worth monitoring") and avoid imperative language ("must", "should immediately", "requires").
-- Tone stays neutral and professional throughout, regardless of how differentiated the compared organizations' practices are.
-- Byline: only as specified by the requesting team; do not add one unprompted.
-
----
-
-## Report Text Must Read as Pure Academic Output (Iron Rule)
-
-The final report shows only research substance — never any trace of the **working process** used to produce it. Process belongs to the conversation and tool logs, never to the report text.
-
-### Phrasing banned from every section of the report
-
-- **Retrieval/fetch process**: fetch, fetch resilience chain, Firecrawl, r.jina.ai, web.archive.org, archive.today, Camoufox, curl, Wayback, snapshot, rendering, crawl, pipeline, SPA shell, 429/403
-- **Agent/model orchestration**: agent, subagent, delegate, cross-model verification, agent reach, round 1, round 2, two-round, supplement round, targeted follow-up round
-- **Retry/repair process**: retry, second pass, resilience, rollback, "after correction", "after re-fetching"
-- **Informal English terms mixed into prose**: vendor, marketing, workaround, fallback (proper nouns / field names are exempt)
-
-### Handling data gaps
-
-- A **verifiable public gap fact** (e.g. a page is no longer public, or a vendor does not break out a given metric) is written in neutral academic language and folded into the body wherever that fact naturally belongs.
-- An item that remains unresolved after both rounds of the workflow below is either folded into its natural location with a neutral confidence marker, or removed if it carries no informative content on its own.
-- **No standalone "data gaps" or "unresolved items" section or appendix.** Every gap disposition lives at the point in the report where the underlying claim would have appeared.
-
-### Neutral academic substitutes
-
-| Process language | Academic substitute |
-|---|---|
-| "still nothing after fetching" | "no corresponding material is publicly available" |
-| "result of the retry search" | "supplementary verifiable fact" |
-| "result of the fetch chain" | "carrier hit outcome" |
-| "response no longer supported" | "no longer publicly available" |
-| "vendor self-reported" | "self-reported by the provider" |
-| "marketing page" | "its website home page" |
-
-### The only "process" trace permitted
-
-- The "access date" column in the reference table — this is a citation-format element, not a process trace.
-- Terms like "fetch", "crawler", or "pipeline" appearing inside a *quoted source's own text* — that belongs to the cited material, not to this report's own working process.
-
-### Pre-delivery check
+### 定稿前檢查（追加為鐵律 4 的一部分）
 
 ```bash
-grep -nE "fetch|Firecrawl|jina|archive\.today|Wayback|Camoufox|snapshot|crawl|retry|agent|subagent|pipeline|SPA|vendor|marketing|fallback|workaround|round 1|round 2|two-round|agent reach|supplement round|data gap(s)? section" report.md
+grep -nE "fetch|Firecrawl|jina|archive\.today|Wayback|Camoufox|snapshot|渲染|爬取|重試|重试|補齊|补齐|韌性|韧性|二次|retry|agent|subagent|pipeline|SPA|vendor|marketing|fallback|workaround|第一輪|第二輪|round.?[12]|two.?round|補強|定向補強|資料缺口清單|agent.?reach" 報告.md
 ```
 
-A hit anywhere outside a reference-table source title means the draft is not final — clear the term or rewrite it in neutral academic language before delivery.
+命中任一 → 判定為未定稿，必須清除或改為中性學術措辭方可交付。命中若在參考資料表的來源標題內（如來源本身即為 fetch API 文檔），保留。
 
 ---
 
-## Standard Research Dimensions
+## 標準風控調研維度
 
-Select as needed:
+依需求選用以下維度：
 
-1. **KYC / AML** — verification tiers, document requirements, biometric checks, high-risk jurisdiction restrictions, suspicious-activity reporting
-2. **Transaction risk control** — anomaly detection, limit mechanisms, leverage/liquidation controls, wash-trading detection
-3. **Account security** — anomalous-login detection, 2FA, account-freeze trigger conditions
-4. **Fund security** — hot/cold wallet management, withdrawal review process, large-withdrawal allowlisting
-5. **Regulatory compliance** — licensing status, FATF Travel Rule, sanctions screening (e.g. OFAC)
-6. **Market integrity** — anti-manipulation controls, price-spike protection, liquidation mechanics
-
----
-
-## Research Workflow
-
-### Round 1 — Initial Pass
-
-```
-WebSearch (2-3 keyword variants, target language + English)
-  ↓
-Build a candidate URL list (not yet cited as fact)
-  ↓
-Record: [N] title — URL — search date
-  ↓
-WebFetch every candidate URL
-  ↓
-Extract concrete numbers / policy detail from the page text
-  ↓
-Cannot extract → mark [⚠️ page unreachable] or [data insufficient], do not cite
-  ↓
-Can extract → add to the citation list, assign N
-  ↓
-Draft the report body, attaching [N] to every claim as it is written
-```
-
-At the end of Round 1, compile a **working gap list** (an internal artifact, not a report section). For every item still marked `[unverified]` / `[⚠️ page unreachable]` / `[data gap]`, record: which dimension/platform it belongs to, the specific claim being sought, the URLs already attempted, and a failure-mode tag:
-
-- **Tag A — blocked/rendered**: the source page exists but WebFetch could not read it (anti-bot block, JS-rendered shell, timeout).
-- **Tag B — not found**: no source was found at all; the claim needs a different angle, a different source, or a different language.
-
-If Round 1 produces no gap items, skip Round 2 entirely and go straight to integration.
-
-### Round 2 — Targeted Follow-Up (single attempt per item, no retries)
-
-Each gap item gets **exactly one** follow-up attempt, routed by its failure-mode tag. Whether it succeeds or fails, do not retry it and do not try the other channel on the same item.
-
-- **Tag A items** → batch the affected URLs into one local anti-bot render pass (see `references/two-round-verification.md` in the sibling `evidence-research-report` skill for the fetch-resilience chain this project already ships, including the local-render tier). One pass per batch, not per URL. A page that renders with real body content is cited normally under Rule 1/Rule 2. A page that still fails is left with its Round-1 marker — final, no second attempt.
-- **Tag B items** → batch same-type gaps into one dispatch to a general-purpose subagent, asking it to re-approach with a different keyword angle, a different language, or an alternate primary source, and to report back either a specific fact with its source URL, or a confirmation that no credible source exists. A negative result is final for that item — no second dispatch.
-
-Do not open a third round. Do not combine both channels on the same item.
-
-### Integration — One Final Report
-
-Merge the Round 1 draft and the Round 2 outcomes into a single report:
-
-- Items resolved in Round 2: rewrite the relevant sentence in place with the new fact and its `[N]`, in the section where it already lived — do not add a new section.
-- Items still unresolved after Round 2: keep the Rule 3 confidence marker in its natural location (a sentence inside the platform's analysis, a table cell) — never collected into a separate list or appendix.
-- Items with no informative content even as a gap (a plain "nothing found," not itself a fact worth stating): remove the claim entirely.
-- Only after this merge, run Rule 4's pre-delivery citation audit.
+1. **KYC / AML** — 驗證層級、文件要求、人臉辨識、高風險地區限制、可疑交易報告
+2. **交易風控** — 異常交易偵測、限額機制、槓桿/爆倉風控、刷量偵測
+3. **帳號安全** — 登入異常偵測、2FA、帳號凍結觸發條件
+4. **資金安全** — 冷熱錢包管理、提幣審核流程、大額提幣白名單
+5. **合規監管** — 持牌情況、FATF Travel Rule、制裁名單篩查（OFAC 等）
+6. **市場風控** — 反市場操縱、插針保護、清算機制
 
 ---
 
-## Report Output Format
+## 競品對標研究
 
-### 1. Executive Summary (≤300 words)
-Objective, scope, key findings, and headline observations.
+分析委託方與同業主流虛擬資產服務商（VASP）之策略差異，具體對標名單依委託方指定代入。若委託方提供內部考核維度作為方案評估依據，制定建議時應納入呼應，但考核維度本身不出現在對外交付的報告文本中。
 
-### 2. Policy Landscape (if applicable)
-Grouping of approaches with representative organizations.
+---
 
-### 3. Comparison Table
+## 調研執行流程
 
-| Dimension | Org A | Org B | … |
+整個流程分三段：第一輪初步調研 → 第二輪定向補強（僅處理缺口，單一嘗試） → 整合定稿。第二輪與整合的動作屬於工作過程，**一律不得出現在最終報告文本中**（見「報告文本純學術性」鐵律）。
+
+### 第一輪：初步調研
+
+**階段 1：搜尋 → 建 URL 候選清單**
+
+```
+WebSearch（2–3 個關鍵字變體，目標語言 + 英文）
+  ↓
+建立 URL 候選清單（暫不引用為事實）
+  ↓
+記錄：[序號] 標題 — URL — 搜尋日期
+```
+
+**階段 2：Fetch → 核實 → 記錄**
+
+```
+對每個 URL 執行 WebFetch
+  ↓
+從頁面原文提取具體數字 / 政策細節
+  ↓
+無法提取 → 標注 [⚠️ 頁面不可達] 或 [資料不足]，不引用
+  ↓
+可提取 → 加入 Citations List，分配序號 N
+```
+
+**階段 3：撰寫初稿**
+
+```
+每條具體主張 → 寫完立即加 [N]
+遇到矛盾資料 → 保留兩說法並各附來源，讓委託方判斷
+無來源的推測 → 明確標注「本分析為推論，非官方數據」
+```
+
+**階段 4：盤點缺口工作清單**（收尾動作，僅供第二輪使用的暫存資料，不是報告章節）
+
+初稿完成後，逐項記錄仍標 `[待核實]` / `⚠️ 頁面不可達` / `⚠️ 資料缺口` 的項目：對應平台／維度、具體待證的主張內容、原始嘗試過的 URL、失敗原因分類：
+
+- ❶ 官方頁面存在但 WebFetch 打不開／疑似防爬或 JS 渲染 → 標記走本地反偵測渲染通道
+- ❷ 根本找不到來源、需要換角度或換語言重找 → 標記走 agent reach 通道
+
+若第一輪完全沒有缺口項目，**第二輪整段略過**，直接進整合定稿。
+
+### 第二輪：定向補強（單一嘗試，失敗即放棄）
+
+依失敗原因分類分派，**每個缺口項目只獲得一次補強機會，不論成功失敗都不重試、不換另一種通道再試一次**：
+
+- **分類 ❶（本地反偵測渲染通道）**：同一批要抓的 URL 合併成一次批次抓取，呼叫本地反偵測渲染腳本（介面比照 `camoufox_fetch.py <URL 或 @urls.txt>`，輸出 `URL / STATUS / TITLE / BODY`，依環境提供），不逐條重試。抓到 BODY 有實質內容 → 依鐵律 1／鐵律 2 正常編號引用；STATUS 非 200 或 BODY 空 → 該項目判定放棄，維持原本鐵律 3 標記。
+- **分類 ❷（agent reach 通道）**：派遣一個通用子代理，同一批同類缺口項目合併成一次派遣，要求子代理換關鍵字角度／換語言／找替代原始來源後回報「找到的具體事實＋來源 URL」或「確認查無可信來源」。子代理回報找不到 → 該項目判定放棄，維持原本鐵律 3 標記。
+
+**明確寫死**：不得因為第二輪失敗就再啟動第三輪，不得混用兩種通道去試同一個項目兩次。
+
+### 整合定稿
+
+把第一輪初稿＋第二輪補強結果合併成單一一份報告：
+
+```
+第一輪初稿 ＋ 第二輪補強結果
+  ↓
+補強成功 → 改寫原處敘述並掛 [N]，融入原本所在段落
+補強後仍放棄 → 維持鐵律 3 標記，留在原本自然位置（嚴禁另立資料缺口清單章節）
+兩輪皆查無所獲且不構成可核實缺口事實 → 直接刪除該主張
+  ↓
+鐵律 4：統計引用數 → 抽查 30% URL → Cross-model 驗證（若可用）
+  ↓
+有 MISMATCH → 修正
+  ↓
+全部通過 → 報告定稿交付
+```
+
+---
+
+## 報告輸出格式
+
+### 一、調研摘要（300 字以內）
+
+本次調研目標、涵蓋範圍、核心發現與主要建議。
+
+### 二、行業政策分類（若適用）
+
+政策分檔說明，附代表交易所。
+
+### 三、橫向對比表
+
+| 維度 | 平台 A | 平台 B | … |
 |------|---------|---------|---|
-| Mechanism X | … [N] | … [N] | … |
+| 機制 X | … [N] | … [N] | … |
 
-### 4. Per-Organization Analysis
-For each organization:
-- Mechanism overview (with `[N]`)
-- Distinctive practices (with `[N]`)
-- Recent material events / regulatory developments (with `[N]`)
+### 四、各平台深度分析
 
-### 5. Gap Analysis
-(where data is sufficient) per-dimension status: met ✅ / partial ⚠️ / insufficient data ❓
+每個平台包含：
+- 機制概述（附 `[N]`）
+- 特色做法（附 `[N]`）
+- 近期重大事件/監管動態（附 `[N]`）
+- 資料缺口標注
 
-### 6. Observations for Consideration
-Prioritized (high/medium/low) points worth noting, each with a supporting reference `[N]`, phrased as observations rather than directives.
+### 五、差距分析
 
-### 7. Reference List
+（如資料充足）逐維度列出：已達標 ✅ / 有差距 ⚠️ / 資料不足 ❓
 
-| N | Source Title | URL |
+### 六、建議與啟示
+
+分優先級（高 / 中 / 低）列出可操作建議，每條建議附對應參考案例 `[N]`。
+
+### 七、參考來源清單
+
+完整格式：
+
+| 序號 | 來源標題 | 連結 |
 |-----|---------|------|
-| 1 | Example Source | https://... |
+| 1 | 平台 A 官方說明文件範例 | https://... |
+| 2 | 平台 B 官方公告範例 | https://... |
 
 ---
 
-## Output Language
+## 輸出語言
 
-Match the language requested by the requesting team; default to the language of the request itself.
+依委託方要求；未指定時預設與調研指令同語言。
 
 ---
 
-## Common Source Types
+## 常用資料來源
 
-- Official documentation / help centers of the organizations under review
-- Public regulatory notices, enforcement records
-- Industry research (e.g. Chainalysis, Elliptic, Messari for crypto-specific work)
-- News coverage of security incidents or regulatory action
-- FATF / OFAC / FinCEN official publications
-- Wayback Machine (fallback when an official page has been taken down)
+- 各交易所官方說明文件、幫助中心
+- 公開監管公告、罰款記錄
+- 業界報告（Chainalysis、Elliptic、Messari）
+- 新聞事件（資安事故、監管處罰）
+- FATF、OFAC、FinCEN 官方發布
+- Wayback Machine（官方頁面下架時的備援）
+
+---
+
+## 執行 SOP
+
+```
+收到指令
+  ↓
+確認調研範圍（未明確才詢問）
+  ↓
+【第一輪】階段 1：WebSearch → URL 候選清單
+  ↓
+【第一輪】階段 2：WebFetch 每個 URL → 核實 → 分配引用序號
+  ↓
+【第一輪】階段 3：撰寫初稿，每條主張即時附 [N]
+  ↓
+產出橫向對比表（先給委託方確認維度正確）
+  ↓
+各平台深度分析
+  ↓
+【第一輪】階段 4：盤點缺口工作清單（無缺口則跳過第二輪）
+  ↓
+【第二輪】依失敗原因分類，本地反偵測渲染／agent reach 各自單一嘗試，失敗即放棄
+  ↓
+【整合定稿】合併兩輪結果，缺口處置寫回原段落，差距分析 + 建議
+  ↓
+鐵律 4：定稿前引用完整性抽查
+  ↓
+Cross-model 驗證（若可用）
+  ↓
+附完整 §七 參考來源清單
+  ↓
+告知委託方：本次調研任務結束
+```
 
 ---
 
 ## Pro Tips
 
-- **Conflicting sources**: keep both readings, each attributed to its source, and let the requesting team judge.
-- **Official page not found**: try Wayback Machine or established industry media before giving up.
-- **Each search keyword**: try 2-3 variants (target language + English) to raise coverage.
-- **Numbers in tables**: attach `[N]` directly in the cell, not only in surrounding prose.
-- **Round 2 routing**: use the local-render channel only when a page demonstrably exists but won't load (anti-bot/JS); use the subagent channel when no source has been found at all. Don't spend a page's one attempt retrying a channel that already failed for the same reason.
+- **遇到矛盾資料**：保留兩個說法並標注出處，讓委託方判斷
+- **官方頁面找不到**：優先嘗試 Wayback Machine 或業界媒體
+- **每個搜尋關鍵字試 2–3 個變體**（目標語言 + 英文）以提高覆蓋率
+- **表格中的數字**：直接附 `[N]`，不要把引用只放在下方文字說明中
+- **Cross-model 可用時**：優先抽查爭議性或難以獨立核實的主張，而非隨機抽查
+- **第二輪通道選擇**：本地反偵測渲染通道只用於官方頁面確實存在但打不開（防爬／JS 渲染）的情況；根本找不到任何來源時該走 agent reach 換角度找，不要對同一個打不開的 URL 反覆嘗試

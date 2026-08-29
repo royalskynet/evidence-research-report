@@ -27,4 +27,4 @@ The two skills serve different report shapes: `evidence-research-report` is deci
 
 ## Note on origin
 
-This pattern was generalized from an internal compliance-research skill built for a specific organization. Organization identity, internal KPI-alignment hooks, and a named peer list were removed before publication here, consistent with this project's existing practice of stripping organization-specific detail from public releases (see `CHANGELOG.md` 1.0.0).
+`competitive-research-report` is a sanitized public mirror of a private exchange risk-control research skill, not an independent design. Organization identity, internal KPI-alignment hooks, and a named peer list are stripped before each publish here, consistent with this project's existing practice of removing organization-specific detail from public releases (see `CHANGELOG.md` 1.0.0). The structure, section order, and wording otherwise track the private edition directly — this is a mirror, not a fork, and it is expected to be updated here whenever the private edition changes.
