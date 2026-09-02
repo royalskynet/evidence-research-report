@@ -227,7 +227,8 @@ def _engine_brave(q: str, maxr: int, key: str) -> tuple[bool, list[tuple[str, st
     _respect_rate_limit("api.search.brave.com")
     url = f"https://api.search.brave.com/res/v1/web/search?q={urllib.parse.quote(q)}&count={maxr}"
     try:
-        status, body = _get(url, {**HEADERS, "X-Subscription-Token": key})
+        # Brave API rejects the shared browser Accept header with HTTP 422; it needs JSON.
+        status, body = _get(url, {**HEADERS, "Accept": "application/json", "X-Subscription-Token": key})
     except Exception:
         return False, []
     if status != 200:
