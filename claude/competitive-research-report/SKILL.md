@@ -51,6 +51,7 @@ allowed-tools:
 ### 鐵律 1 — Fetch-Before-Write
 **寫任何具體數字、政策細節、機制描述前，必須先 WebFetch 原始頁面。**
 - 只 WebSearch 找到 URL 但未 WebFetch 全文 → 不得引用為事實
+- **WebSearch 連續回空（只有標題行、零連結）≠ 查無資料**：某些後端未實作該工具且不報錯，換關鍵字重搜是空轉。立即改走 profile 指定的本地搜尋通道，不得據此宣告「查無來源」
 - 若 WebFetch 失敗（404 / 超時），標注 `[⚠️ 頁面不可達，資料來源存疑]`，不得繼續引用
 
 ### 鐵律 2 — Inline Citation 強制
@@ -193,6 +194,8 @@ grep -nE "fetch|Firecrawl|jina|archive\.today|Wayback|Camoufox|snapshot|渲染|�
 
 ```
 WebSearch（2–3 個關鍵字變體，英文 + 中文）
+  ↓
+回空（無任何連結）→ 改走 profile 指定的「本地搜尋通道」，同一批關鍵字一次發完
   ↓
 建立 URL 候選清單（暫不引用為事實）
   ↓
